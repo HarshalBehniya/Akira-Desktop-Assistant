@@ -31,26 +31,26 @@ git clone https://github.com/HarshalBehniya/Akira-Desktop-Assistant.git
 
 cd Akira-Desktop-Assistant
 
-2. Create & Activate Virtual Environment (optional but recommended)
+### 2. Create & Activate Virtual Environment (optional but recommended)
 
 python -m venv venv
 venv\Scripts\activate   # Windows
 
-3. Install Dependencies
+### 3. Install Dependencies
 
 pip install -r requirements.txt
 
-4. Download ChromeDriver
+### 4. Download ChromeDriver
 Make sure ChromeDriver is installed and added to your system path. Version should match your Chrome browser.
 
-▶️ How to Run
+### ▶️ How to Run
 
 python akira_app.py
 
 ---
 
 
-📁 Project Structure
+## 📁 Project Structure
 
 akira_app.py            # GUI application
 
@@ -65,7 +65,7 @@ README.md               # This file
 ---
 
 
-💬 Example Voice Commands
+## 💬 Example Voice Commands
 
 Remind me to drink water at 4 PM
 
@@ -87,7 +87,7 @@ Search Google for Python tutorials
 
 
 
-🤖 Tech Stack
+## 🤖 Tech Stack
 
 Python 3.10+
 
@@ -106,6 +106,6 @@ Threading – Efficient reminders and real-time response
 ---
 
 
-💡 Credits
+## 💡 Credits
 Created with 💻 by Harshal Behniya
 
