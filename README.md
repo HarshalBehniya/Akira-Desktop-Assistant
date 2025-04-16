@@ -49,9 +49,13 @@ python akira_app.py
 📁 Project Structure
 
 akira_app.py            # GUI application
+
 akira_engine.py         # All backend logic and handlers
+
 data/                   # Screenshots, reminders, notes, face data
+
 requirements.txt        # Python dependencies
+
 README.md               # This file
 
 💬 Example Voice Commands
