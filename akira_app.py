@@ -1,9 +1,10 @@
 import tkinter as tk
+import os
 from tkinter import scrolledtext
 import threading
 from akira_engine import *
 from PIL import Image, ImageTk  
-from pystray import Icon, MenuItem, Menu
+# from pystray import Icon, MenuItem, Menu
 
 
 class AkiraApp:
@@ -15,8 +16,8 @@ class AkiraApp:
         self.root.minsize(700, 500)  # Minimum size for responsiveness
 
         # Set the icon for the window (Ensure you have an .ico file in the same directory or specify the path)
-        self.root.iconbitmap('akira_icon.ico')  # Replace 'akira_icon.ico' with your icon filename
-
+        # icon_path = os.path.join(os.path.dirname(__file__), "akira_icon.ico")
+        # self.root.iconbitmap(icon_path)
         
         # Header Label with sleek design
         self.header = tk.Label(
@@ -348,11 +349,13 @@ class AkiraApp:
                 return
 
             if "register my face" in query:
-                if "as" in query:
-                    name = query.split("as")[-1].strip().title()
-                    register_face(name)
-                else:
-                    register_face()
+                # if "as" in query:
+                #     name = query.split("as")[-1].strip().title()
+                #     register_face(name)
+                # else:
+                #     register_face()
+                say("This feature is not available in this version")
+
                 return
 
             name, message = extract_message_info(query)
