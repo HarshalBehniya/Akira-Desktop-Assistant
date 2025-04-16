@@ -22,7 +22,6 @@ Akira is a powerful voice and text-based AI desktop assistant built using Python
 
 ---
 
----
 
 ## 🛠️ Setup Instructions
 
@@ -50,7 +49,6 @@ python akira_app.py
 
 ---
 
----
 
 📁 Project Structure
 
@@ -88,7 +86,6 @@ Search Google for Python tutorials
 
 ---
 
----
 
 
 🤖 Tech Stack
@@ -109,9 +106,7 @@ Threading – Efficient reminders and real-time response
 
 ---
 
----
 
 💡 Credits
 Created with 💻 by Harshal Behniya
 
----
