@@ -22,6 +22,8 @@ Akira is a powerful voice and text-based AI desktop assistant built using Python
 
 ---
 
+---
+
 ## 🛠️ Setup Instructions
 
 ### 1. Clone the Repository
@@ -46,6 +48,10 @@ Make sure ChromeDriver is installed and added to your system path. Version shoul
 
 python akira_app.py
 
+---
+
+---
+
 📁 Project Structure
 
 akira_app.py            # GUI application
@@ -57,6 +63,10 @@ data/                   # Screenshots, reminders, notes, face data
 requirements.txt        # Python dependencies
 
 README.md               # This file
+
+---
+
+---
 
 💬 Example Voice Commands
 
@@ -76,6 +86,9 @@ Clean my PC
 
 Search Google for Python tutorials
 
+---
+
+---
 
 
 🤖 Tech Stack
@@ -94,5 +107,11 @@ Face recognition – Face registration & lock screen
 
 Threading – Efficient reminders and real-time response
 
+---
+
+---
+
 💡 Credits
 Created with 💻 by Harshal Behniya
+
+---
