@@ -1,22 +1,24 @@
 import os
 import webbrowser
-# import win32com.client
+import win32com.client
 import subprocess
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-# from selenium.webdriver.chrome.options import Options
-# from selenium.webdriver.chrome.service import Service
-# from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+from urllib.parse import quote_plus
+
 import cv2
 from urllib.parse import quote
 import time
 import pyautogui
 import pyttsx3
 import threading
-# import queue
+import queue
 from playsound import playsound
 import re
 import pygetwindow as gw
@@ -33,7 +35,7 @@ import webbrowser
 import numpy as np
 from queue import Queue
 
-# import face_recognition
+import face_recognition
 from urllib.parse import quote_plus
 
 webbrowser.register('chrome', None, webbrowser.BackgroundBrowser("C://Program Files//Google//Chrome//Application//chrome.exe"))
@@ -613,11 +615,11 @@ def handle_note_feature(query):
 
 
 def google_search(query, say=None):
-    if not query:
+    if not query or not query.strip():
         if say:
             say("What would you like to search for?")
         return
-    
+
     search_query = quote_plus(query)
     url = f"https://www.google.com/search?q={search_query}"
     webbrowser.open(url)
@@ -671,19 +673,19 @@ def take_selfie():
     except Exception as e:
         say("An error occurred while taking selfie.")
         print("Selfie error:", e)
-recording = False
+        
+recording_event = threading.Event()
 video_writer = None
 cap = None
 
 # Ensure the videos directory exists
 videos_folder = os.path.join("data", "videos")
-if not os.path.exists(videos_folder):
-    os.makedirs(videos_folder)
+os.makedirs(videos_folder, exist_ok=True)
 
 def start_video_recording(filename="recorded_video.avi"):
-    global recording, video_writer, cap
+    global video_writer, cap
 
-    if recording:
+    if recording_event.is_set():
         say("Video is already recording.")
         return
 
@@ -697,39 +699,40 @@ def start_video_recording(filename="recorded_video.avi"):
     width = int(cap.get(3))
     height = int(cap.get(4))
 
-    # Save the video in the 'videos' folder inside the 'data' folder
     filename = os.path.join(videos_folder, filename)
-
     video_writer = cv2.VideoWriter(filename, fourcc, fps, (width, height))
 
-    recording = True
+    recording_event.set()
     say("Video recording started.")
 
     def record():
-        while recording:
+        while recording_event.is_set():
             ret, frame = cap.read()
             if ret:
                 video_writer.write(frame)
             time.sleep(0.05)
 
-    threading.Thread(target=record).start()
+    threading.Thread(target=record, daemon=True).start()
 
 def stop_video_recording():
-    global recording, video_writer, cap
+    global video_writer, cap
 
-    if not recording:
+    if not recording_event.is_set():
         say("Video is not currently recording.")
         return
 
-    recording = False
-    time.sleep(0.5)  # Allow last frame to finish
+    recording_event.clear()
+    time.sleep(0.5)  # Allow last frame to be processed
 
-    video_writer.release()
-    cap.release()
+    if video_writer:
+        video_writer.release()
+        video_writer = None
+
+    if cap and cap.isOpened():
+        cap.release()
+        cap = None
     cv2.destroyAllWindows()
     say("Video recording stopped and saved.")
-
-
 
 screen_recording = False
 screen_writer = None
@@ -860,34 +863,34 @@ def remove_todo(index):
     say(f"Removed task: {removed_task['task']}")
 
 
-# def register_face(name=None):
-#     if not name:
-#         say("What name should I register this face as?")
-#         # name = listen().strip().title()  # Clean and format name input
+def register_face(name=None):
+    if not name:
+        say("What name should I register this face as?")
+        # name = listen().strip().title()  # Clean and format name input
 
-#     folder_path = os.path.join("data", "known_faces", name)
-#     os.makedirs(folder_path, exist_ok=True)
+    folder_path = os.path.join("data", "known_faces", name)
+    os.makedirs(folder_path, exist_ok=True)
 
-#     cap = cv2.VideoCapture(0)
-#     if not cap.isOpened():
-#         say("Camera not accessible.")
-#         return
+    cap = cv2.VideoCapture(0)
+    if not cap.isOpened():
+        say("Camera not accessible.")
+        return
 
-#     say(f"Please look at the camera, {name}. Capturing your face...")
-#     ret, frame = cap.read()
-#     cap.release()
+    say(f"Please look at the camera, {name}. Capturing your face...")
+    ret, frame = cap.read()
+    cap.release()
 
-#     if not ret:
-#         say("Failed to capture your face.")
-#         return
+    if not ret:
+        say("Failed to capture your face.")
+        return
 
-#     filename = datetime.now().strftime("%Y-%m-%d_%H-%M-%S.jpg")
-#     file_path = os.path.join(folder_path, filename)
-#     cv2.imwrite(file_path, frame)
+    filename = datetime.now().strftime("%Y-%m-%d_%H-%M-%S.jpg")
+    file_path = os.path.join(folder_path, filename)
+    cv2.imwrite(file_path, frame)
 
-#     say(f"Face registered successfully under the name {name}.")
-# known_encodings = []
-# known_names = []
+    say(f"Face registered successfully under the name {name}.")
+known_encodings = []
+known_names = []
 
 
 
@@ -895,58 +898,58 @@ def remove_todo(index):
 # def say(text):
 #     print(f"Akira: {text}")  # Replace with your TTS engine (e.g., pyttsx3 or gTTS)
 
-# def recognize_face_and_act():
-#     say("Scanning your face...")
-#     cap = cv2.VideoCapture(0)
+def recognize_face_and_act():
+    say("Scanning your face...")
+    cap = cv2.VideoCapture(0)
 
-#     if not cap.isOpened():
-#         say("Camera not accessible.")
-#         return
+    if not cap.isOpened():
+        say("Camera not accessible.")
+        return
 
-#     ret, frame = cap.read()
-#     cap.release()
+    ret, frame = cap.read()
+    cap.release()
 
-#     if not ret:
-#         say("Failed to capture frame.")
-#         return
+    if not ret:
+        say("Failed to capture frame.")
+        return
 
-#     # Convert BGR (OpenCV default) to RGB (face_recognition expects RGB)
-#     rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    # Convert BGR (OpenCV default) to RGB (face_recognition expects RGB)
+    rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
-#     # Detect face locations
-#     face_locations = face_recognition.face_locations(rgb_frame)
+    # Detect face locations
+    face_locations = face_recognition.face_locations(rgb_frame)
 
-#     if not face_locations:
-#         say("No face detected.")
-#         return
+    if not face_locations:
+        say("No face detected.")
+        return
 
-#     # Encode detected faces
-#     face_encodings = face_recognition.face_encodings(rgb_frame, face_locations)
+    # Encode detected faces
+    face_encodings = face_recognition.face_encodings(rgb_frame, face_locations)
 
-#     for encoding in face_encodings:
-#         # Compare with known encodings
-#         matches = face_recognition.compare_faces(known_encodings, encoding)
-#         face_distances = face_recognition.face_distance(known_encodings, encoding)
+    for encoding in face_encodings:
+        # Compare with known encodings
+        matches = face_recognition.compare_faces(known_encodings, encoding)
+        face_distances = face_recognition.face_distance(known_encodings, encoding)
 
-#         if len(face_distances) == 0:
-#             continue  # No known faces to compare with
+        if len(face_distances) == 0:
+            continue  # No known faces to compare with
 
-#         best_match_index = np.argmin(face_distances)
+        best_match_index = np.argmin(face_distances)
 
-#         if matches[best_match_index]:
-#             name = known_names[best_match_index]
-#             say(f"Access granted. Hello {name}.")
-#             return
+        if matches[best_match_index]:
+            name = known_names[best_match_index]
+            say(f"Access granted. Hello {name}.")
+            return
 
-#     # No match found
-#     say("Face not recognized. Taking a selfie and locking screen.")
+    # No match found
+    say("Face not recognized. Taking a selfie and locking screen.")
 
-#     # Save selfie to 'data/selfies'
-#     selfies_folder = os.path.join("data", "selfies")
-#     os.makedirs(selfies_folder, exist_ok=True)
-#     timestamp = datetime.now().strftime("unknown_%Y-%m-%d_%H-%M-%S.jpg")
-#     selfie_path = os.path.join(selfies_folder, timestamp)
-#     cv2.imwrite(selfie_path, frame)
+    # Save selfie to 'data/selfies'
+    selfies_folder = os.path.join("data", "selfies")
+    os.makedirs(selfies_folder, exist_ok=True)
+    timestamp = datetime.now().strftime("unknown_%Y-%m-%d_%H-%M-%S.jpg")
+    selfie_path = os.path.join(selfies_folder, timestamp)
+    cv2.imwrite(selfie_path, frame)
 
-#     # Lock the screen
-#     ctypes.windll.user32.LockWorkStation()
+    # Lock the screen
+    ctypes.windll.user32.LockWorkStation()
