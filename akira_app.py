@@ -1,10 +1,7 @@
 import tkinter as tk
-import os
 from tkinter import scrolledtext
 import threading
 from akira_engine import *
-from PIL import Image, ImageTk  
-# from pystray import Icon, MenuItem, Menu
 
 
 class AkiraApp:
@@ -16,8 +13,8 @@ class AkiraApp:
         self.root.minsize(700, 500)  # Minimum size for responsiveness
 
         # Set the icon for the window (Ensure you have an .ico file in the same directory or specify the path)
-        # icon_path = os.path.join(os.path.dirname(__file__), "akira_icon.ico")
-        # self.root.iconbitmap(icon_path)
+        self.root.iconbitmap('akira_icon.ico')  # Replace 'akira_icon.ico' with your icon filename
+
         
         # Header Label with sleek design
         self.header = tk.Label(
@@ -286,16 +283,16 @@ class AkiraApp:
             if any(x in query for x in ["search google", "look up", "google"]):
                 if "google" in query:
                     search_term = query.split("google", 1)[1].strip()
-                    return
+                    
                 elif "search google for" in query:
                     search_term = query.split("search google for", 1)[1].strip()
-                    return
+                    
                 elif "look up the" in query:
                     search_term = query.split("look up the", 1)[1].strip()
-                    return
+                    
                 elif "look up" in query:
                     search_term = query.split("look up", 1)[1].strip()
-                    return
+                    
                 else:
                     search_term = ""
                 google_search(search_term, say)
@@ -317,11 +314,13 @@ class AkiraApp:
                 return
 
             if any(x in query for x in ["end video", "stop video", "end recording", "stop recording"]):
-                if recording:
+                print("Recording event is_set:", recording_event.is_set())  # Debug line
+                if recording_event.is_set():
                     stop_video_recording()
                 else:
                     say("Video is not currently recording.")
                 return
+
 
             if "start screen recording" in query or "record screen" in query:
                 start_screen_recording()
@@ -349,13 +348,11 @@ class AkiraApp:
                 return
 
             if "register my face" in query:
-                # if "as" in query:
-                #     name = query.split("as")[-1].strip().title()
-                #     register_face(name)
-                # else:
-                #     register_face()
-                say("This feature is not available in this version")
-
+                if "as" in query:
+                    name = query.split("as")[-1].strip().title()
+                    register_face(name)
+                else:
+                    register_face()
                 return
 
             name, message = extract_message_info(query)
