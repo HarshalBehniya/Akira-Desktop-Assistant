@@ -12,12 +12,12 @@ Akira is a powerful voice and text-based AI desktop assistant built using Python
 - 📹 **Video & Screen Recording**
 - 📝 **Note taking + To-do list management**
 - 📷 **Selfie and Screenshot capture**
-- 🎬 **YouTube Controls**: Play, pause, next, previous
+- 🎬 **YouTube
 - 🌐 **Google Search + ChatGPT Search**
 - 💻 **System control**: Shutdown, restart, lock, etc.
 - 💬 **Send WhatsApp messages automatically**
 - 🧹 **PC Cleanup tools**
-- 👁️ **Face registration and detection**
+- 👁️ **Face registration**
 - 🧠 **Contextual Memory** for follow-up commands
 
 ---
@@ -103,9 +103,21 @@ Face recognition – Face registration & lock screen
 
 Threading – Efficient reminders and real-time response
 
+Voice Recognition	- speechrecognition, pyaudio, pyttsx3
+
+System Control - 	pyautogui, pygetwindow, psutil, ctypes, os, platform
+
+Camera & Face Recognition - 	opencv-python, face-recognition, numpy
+
+Web Automation - 	selenium, webdriver-manager, webbrowser
+
+Audio Playback - 	playsound
+
+JSON & File Ops - 	json, shutil, queue, threading (standard)
+
 ---
 
 
 ## 💡 Credits
-Created with 💻 by Harshal Behniya
+Created with 💻 by Harshal Behniya, Chetan Mahalle, Md. Sahil sheikh
 
