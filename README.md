@@ -93,14 +93,6 @@ Python 3.10+
 
 Tkinter – GUI
 
-SpeechRecognition, PyAudio – Voice input
-
-PyAutoGUI, OpenCV, pyttsx3 – Interaction & automation
-
-Selenium – WhatsApp automation
-
-Face recognition – Face registration & lock screen
-
 Threading – Efficient reminders and real-time response
 
 Voice Recognition	- speechrecognition, pyaudio, pyttsx3
